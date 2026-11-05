@@ -11,8 +11,22 @@ Detect developing bearing faults early from vibration data, to allow planned ins
 3. Set the alarm limit on separate healthy validation data (avoids data leakage)
 4. Smooth the anomaly score (moving average) and require consecutive exceedances
 5. Evaluate lead time and false alarms
+## Results (NASA IMS Bearing Dataset)
 
-## Status
-- [x] Pipeline on synthetic data (first alarm 15 measurements after fault onset, 0 false alarms)
-- [ ] Real data: NASA IMS Bearing Dataset (run-to-failure)
-- [ ] Spectrum (FFT) based features
+| Test | Fault | Simple RMS threshold | Isolation Forest |
+|---|---|---|---|
+| 2nd (10 min sampling) | Outer race, bearing 1 | alarm 76.3 h before end | 74.8 h |
+| 3rd (30 min sampling) | Outer race, bearing 3 | alarm 136.0 h before end | 134.5 h |
+
+Alarm limit = maximum of the smoothed score on unseen healthy data; alarm requires 3 consecutive exceedances. Lead time is measured to the end of the recording, not to an exact failure time.
+
+## Findings
+- Both methods give days of warning with zero false alarms on the validation window.
+- A simple RMS threshold performed as well as Isolation Forest on these two runs (within 1.5 h). The multi-feature model is not better on strong outer-race faults.
+
+## Next
+- [ ] Test 1 (inner race and roller element faults), where RMS may react later
+- [ ] FFT / envelope spectrum features
+
+## Tools
+Python, NumPy, SciPy, scikit-learn, Matplotlib
